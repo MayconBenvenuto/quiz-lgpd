@@ -1,12 +1,43 @@
 # 🚀 DEPLOY - Quiz LGPD Universidade Belz
 
-## ✨ OPÇÕES DE DEPLOY GRATUITO
+## ✅ STATUS: PRONTO PARA DEPLOY
 
-### 1. 🥇 RENDER.COM (Recomendado - 100% Gratuito)
+O projeto foi otimizado e está 100% pronto para deploy em produção!
 
-**Passos:**
+## 🥇 RENDER.COM (Recomendado - GRATUITO)
 
-1. **Criar conta:** https://render.com (login com GitHub)
+### **Passos Detalhados:**
+
+#### 1. **Preparar Repositório**
+- ✅ Código já está commitado no Git
+- ✅ Arquivos de configuração prontos
+- ✅ Dependências especificadas
+
+#### 2. **Acessar o Render**
+- Acesse: https://render.com
+- Clique em "Get Started for Free"
+- Faça login com sua conta GitHub
+
+#### 3. **Criar Web Service**
+- Clique em "New" → "Web Service"
+- Conecte sua conta GitHub se solicitado
+- Selecione o repositório do quiz-lgpd
+
+#### 4. **Configurar Deploy**
+Use EXATAMENTE estas configurações:
+
+```yaml
+Name: quiz-lgpd-belz
+Runtime: Python 3
+Build Command: pip install -r requirements_deploy.txt
+Start Command: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+```
+
+#### 5. **Variáveis de Ambiente (Automáticas)**
+O render.yaml já configura:
+- ✅ `SECRET_KEY`: Gerada automaticamente
+- ✅ `FLASK_ENV`: production
+- ✅ `PYTHON_VERSION`: 3.11.10
 
 2. **Configurar no Render:**
    - New → Web Service
