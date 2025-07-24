@@ -20,24 +20,8 @@ app.config['SESSION_COOKIE_SECURE'] = os.environ.get('FLASK_ENV') == 'production
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hora
 
-# Lista de participantes
-PARTICIPANTES = [
-    "Ana Silva – Desenvolvedora Frontend",
-    "Carlos Santos – Desenvolvedor Backend", 
-    "Diana Costa – Product Manager",
-    "Eduardo Lima – DevOps Engineer",
-    "Fernanda Oliveira – UX/UI Designer",
-    "Gabriel Martins – Analista de Dados",
-    "Helena Rodrigues – Gerente de Produto",
-    "Igor Pereira – Tech Lead",
-    "Julia Almeida – Analista de QA",
-    "Lucas Ferreira – Arquiteto de Software",
-    "Mariana Sousa – Especialista em Segurança",
-    "Nicolas Barbosa – Scrum Master",
-    "Patricia Gomes – Diretora de Tecnologia",
-    "Roberto Silva – CTO",
-    "Sofia Mendes – Especialista em Dados de Saúde"
-]
+# Não há mais lista pré-definida de participantes
+# Os usuários podem inserir seu próprio nome e sobrenome
 
 # Perguntas do quiz sobre Medsenior
 PERGUNTAS = [
@@ -47,8 +31,7 @@ PERGUNTAS = [
             "180 dias",
             "120 dias",
             "90 dias",
-            "60 dias",
-            "30 dias"
+            "60 dias"
         ],
         "resposta_correta": 0
     },
@@ -58,8 +41,7 @@ PERGUNTAS = [
             "Planos de saúde para empresas",
             "Consultoria médica",
             "Planos de saúde para idosos",
-            "Medicina preventiva",
-            "Seguro de vida"
+            "Medicina preventiva"
         ],
         "resposta_correta": 2
     },
@@ -69,8 +51,7 @@ PERGUNTAS = [
             "50 anos",
             "55 anos",
             "60 anos",
-            "65 anos",
-            "70 anos"
+            "65 anos"
         ],
         "resposta_correta": 1
     },
@@ -80,8 +61,7 @@ PERGUNTAS = [
             "Preços mais baixos",
             "Atendimento especializado para a terceira idade",
             "Cobertura internacional",
-            "Consultas online",
-            "Medicamentos gratuitos"
+            "Consultas online"
         ],
         "resposta_correta": 1
     },
@@ -91,8 +71,7 @@ PERGUNTAS = [
             "Não há carência",
             "30 dias",
             "60 dias",
-            "90 dias",
-            "180 dias"
+            "90 dias"
         ],
         "resposta_correta": 0
     },
@@ -102,8 +81,7 @@ PERGUNTAS = [
             "Apenas consultas",
             "Consultas e exames",
             "Cobertura hospitalar completa",
-            "Apenas emergências",
-            "Apenas medicina preventiva"
+            "Apenas emergências"
         ],
         "resposta_correta": 2
     },
@@ -113,10 +91,9 @@ PERGUNTAS = [
             "180 dias",
             "240 dias",
             "300 dias",
-            "360 dias",
             "Não se aplica ao público-alvo"
         ],
-        "resposta_correta": 4
+        "resposta_correta": 3
     },
     {
         "pergunta": "A Medsenior possui rede própria ou credenciada?",
@@ -124,8 +101,7 @@ PERGUNTAS = [
             "Apenas rede própria",
             "Apenas rede credenciada",
             "Ambas - rede própria e credenciada",
-            "Não possui rede",
-            "Apenas parcerias"
+            "Não possui rede"
         ],
         "resposta_correta": 2
     },
@@ -135,8 +111,7 @@ PERGUNTAS = [
             "Medicina esportiva",
             "Pediatria",
             "Geriatria e cuidados com idosos",
-            "Medicina do trabalho",
-            "Medicina estética"
+            "Medicina do trabalho"
         ],
         "resposta_correta": 2
     },
@@ -146,8 +121,7 @@ PERGUNTAS = [
             "Não oferece",
             "Apenas para emergências",
             "Sim, conforme ANS",
-            "Apenas com coparticipação",
-            "Apenas mediante análise"
+            "Apenas com coparticipação"
         ],
         "resposta_correta": 2
     }
@@ -192,7 +166,7 @@ def after_request(response):
 
 @app.route('/')
 def index():
-    return render_template('index_novo.html', participantes=PARTICIPANTES)
+    return render_template('index_novo.html')
 
 @app.route('/iniciar_quiz', methods=['POST'])
 def iniciar_quiz():
@@ -205,11 +179,23 @@ def iniciar_quiz():
         logger.info(f"Tentativa de iniciar quiz: {participante}")
         
         if not participante:
-            return jsonify({'erro': 'Participante não selecionado'}), 400
+            return jsonify({'erro': 'Nome completo é obrigatório'}), 400
         
-        # Validar se o participante está na lista permitida
-        if participante not in PARTICIPANTES:
-            return jsonify({'erro': 'Participante não válido'}), 400
+        # Validar se o nome tem pelo menos nome e sobrenome
+        palavras = participante.split()
+        if len(palavras) < 2:
+            return jsonify({'erro': 'Por favor, informe nome e sobrenome completos'}), 400
+        
+        # Validar se contém apenas letras, espaços e acentos
+        import re
+        if not re.match(r'^[a-zA-ZÀ-ÿ\s]+$', participante):
+            return jsonify({'erro': 'Nome deve conter apenas letras'}), 400
+        
+        # Validar tamanho mínimo e máximo
+        if len(participante) < 5:
+            return jsonify({'erro': 'Nome muito curto'}), 400
+        if len(participante) > 100:
+            return jsonify({'erro': 'Nome muito longo'}), 400
         
         # Inicializar sessão
         session.permanent = True

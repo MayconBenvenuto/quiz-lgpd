@@ -26,23 +26,27 @@ Sistema de quiz interativo sobre planos de saúde especializados para a terceira
 - ✅ Validação de participantes contra lista permitida
 - ✅ Sessões seguras com timeout
 
-## 👥 Participantes Cadastrados
+## 👥 Como Participar
 
-- Ana Silva – Desenvolvedora Frontend
-- Carlos Santos – Desenvolvedor Backend
-- Diana Costa – Product Manager
-- Eduardo Lima – DevOps Engineer
-- Fernanda Oliveira – UX/UI Designer
-- Gabriel Martins – Analista de Dados
-- Helena Rodrigues – Gerente de Produto
-- Igor Pereira – Tech Lead
-- Julia Almeida – Analista de QA
-- Lucas Ferreira – Arquiteto de Software
-- Mariana Sousa – Especialista em Segurança
-- Nicolas Barbosa – Scrum Master
-- Patricia Gomes – Diretora de Tecnologia
-- Roberto Silva – CTO
-- Sofia Mendes – Especialista em Dados de Saúde
+Não há mais lista pré-definida de participantes. Qualquer pessoa pode participar do quiz:
+
+**Requisitos para o nome:**
+- Nome e sobrenome completos são obrigatórios
+- Mínimo de 5 caracteres
+- Máximo de 100 caracteres
+- Apenas letras, espaços e acentos são permitidos
+- Não são permitidos números ou caracteres especiais
+
+**Exemplo de nomes válidos:**
+- João Silva
+- Maria Santos
+- Ana Paula Costa
+- José dos Santos
+
+**Exemplos de nomes inválidos:**
+- João (apenas um nome)
+- João123 (contém números)
+- J.Silva (contém pontos)
 
 ## Como Executar
 
