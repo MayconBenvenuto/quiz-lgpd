@@ -1,11 +1,11 @@
-# Quiz LGPD - Universidade Belz
+# Quiz Medsenior
 
-Sistema de quiz interativo sobre Lei Geral de Proteção de Dados (LGPD) desenvolvido em Python Flask.
+Sistema de quiz interativo sobre planos de saúde especializados para a terceira idade desenvolvido em Python Flask.
 
 ## ✨ Funcionalidades
 
 - ✅ Seleção de participante de lista pré-definida
-- ✅ 10 perguntas sobre LGPD com 5 alternativas cada
+- ✅ 10 perguntas sobre a Medsenior com 5 alternativas cada
 - ✅ Timer de 60 segundos por pergunta
 - ✅ Sistema de pontuação baseado na velocidade de resposta
 - ✅ Feedback imediato (acerto/erro com resposta correta)
@@ -28,19 +28,21 @@ Sistema de quiz interativo sobre Lei Geral de Proteção de Dados (LGPD) desenvo
 
 ## 👥 Participantes Cadastrados
 
-- Viviane Pereira Pinto – Implantação
-- Ellen Conceição de Oliveira – Movimentação Consultores
-- Tuanny Luiza Santos – Implantação
-- Josemir – Envio de Boletos, Atendimento ao Cliente
-- Fabiana Ramalho – Supervisora de Marketing
-- Maria Eduarda Vasconcelos dos Santos – Assistente de Marketing
-- Mayara Lima – Coordenadora Equipe Operacional, Implantação Grandes Empresas
-- Michele Verçosa – Supervisora Movimentação, Relacionamento com Grandes Empresas
-- Josenilda Ribeiro de Menezes – Gestora de Saúde e Segurança do Trabalho
-- Elton Albuquerque – COO
-- Ricardo Belz – CFO
-- Raphael Belz – CEO
-- Bruno Vilela – Head Conecta Saúde
+- Ana Silva – Desenvolvedora Frontend
+- Carlos Santos – Desenvolvedor Backend
+- Diana Costa – Product Manager
+- Eduardo Lima – DevOps Engineer
+- Fernanda Oliveira – UX/UI Designer
+- Gabriel Martins – Analista de Dados
+- Helena Rodrigues – Gerente de Produto
+- Igor Pereira – Tech Lead
+- Julia Almeida – Analista de QA
+- Lucas Ferreira – Arquiteto de Software
+- Mariana Sousa – Especialista em Segurança
+- Nicolas Barbosa – Scrum Master
+- Patricia Gomes – Diretora de Tecnologia
+- Roberto Silva – CTO
+- Sofia Mendes – Especialista em Dados de Saúde
 
 ## Como Executar
 

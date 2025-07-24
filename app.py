@@ -22,133 +22,134 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hora
 
 # Lista de participantes
 PARTICIPANTES = [
-    "Maycon – Desenvolvedor/Tester",
-    "Viviane Pereira Pinto – Implantação",
-    "Ellen Conceição de Oliveira – Movimentação Consultores",
-    "Tuanny Luiza Santos – Implantação",
-    "Josemir – Envio de Boletos, Atendimento ao Cliente",
-    "Fabiana Ramalho – Supervisora de Marketing",
-    "Maria Eduarda Vasconcelos dos Santos – Assistente de Marketing",
-    "Mayara Lima – Coordenadora Equipe Operacional, Implantação Grandes Empresas",
-    "Michele Verçosa – Supervisora Movimentação, Relacionamento com Grandes Empresas",
-    "Josenilda Ribeiro de Menezes – Gestora de Saúde e Segurança do Trabalho",
-    "Elton Albuquerque – COO",
-    "Ricardo Belz – CFO",
-    "Raphael Belz – CEO",
-    "Bruno Vilela – Head Conecta Saúde"
+    "Ana Silva – Desenvolvedora Frontend",
+    "Carlos Santos – Desenvolvedor Backend", 
+    "Diana Costa – Product Manager",
+    "Eduardo Lima – DevOps Engineer",
+    "Fernanda Oliveira – UX/UI Designer",
+    "Gabriel Martins – Analista de Dados",
+    "Helena Rodrigues – Gerente de Produto",
+    "Igor Pereira – Tech Lead",
+    "Julia Almeida – Analista de QA",
+    "Lucas Ferreira – Arquiteto de Software",
+    "Mariana Sousa – Especialista em Segurança",
+    "Nicolas Barbosa – Scrum Master",
+    "Patricia Gomes – Diretora de Tecnologia",
+    "Roberto Silva – CTO",
+    "Sofia Mendes – Especialista em Dados de Saúde"
 ]
 
-# Perguntas do quiz sobre LGPD
+# Perguntas do quiz sobre Medsenior
 PERGUNTAS = [
     {
-        "pergunta": "O que significa a sigla LGPD?",
+        "pergunta": "Qual é o tempo de carência normal para internações clínicas, cirúrgicas e UTI na Medsenior?",
         "alternativas": [
-            "Lei Geral de Proteção de Dados",
-            "Lei Geral de Privacidade Digital",
-            "Lei de Gestão de Proteção de Dados",
-            "Lei Geral de Procedimentos Digitais",
-            "Lei de Governança de Proteção Digital"
+            "180 dias",
+            "120 dias",
+            "90 dias",
+            "60 dias",
+            "30 dias"
         ],
         "resposta_correta": 0
     },
     {
-        "pergunta": "Qual é o prazo máximo para notificar a ANPD sobre incidentes de segurança?",
+        "pergunta": "Qual é a especialidade principal da Medsenior?",
         "alternativas": [
-            "24 horas",
-            "48 horas",
-            "72 horas",
-            "7 dias",
-            "15 dias"
-        ],
-        "resposta_correta": 1
-    },
-    {
-        "pergunta": "Qual das seguintes NÃO é uma base legal para tratamento de dados pessoais?",
-        "alternativas": [
-            "Consentimento do titular",
-            "Cumprimento de obrigação legal",
-            "Interesse legítimo",
-            "Proteção da vida",
-            "Curiosidade empresarial"
-        ],
-        "resposta_correta": 4
-    },
-    {
-        "pergunta": "O que são dados pessoais sensíveis segundo a LGPD?",
-        "alternativas": [
-            "Dados que podem causar danos financeiros",
-            "Dados sobre origem racial, convicções religiosas, dados genéticos, biométricos, etc.",
-            "Dados bancários e financeiros",
-            "Dados de localização geográfica",
-            "Dados de navegação na internet"
-        ],
-        "resposta_correta": 1
-    },
-    {
-        "pergunta": "Qual é a multa máxima prevista na LGPD?",
-        "alternativas": [
-            "R$ 10 milhões",
-            "R$ 25 milhões",
-            "R$ 50 milhões",
-            "R$ 100 milhões",
-            "R$ 200 milhões"
+            "Planos de saúde para empresas",
+            "Consultoria médica",
+            "Planos de saúde para idosos",
+            "Medicina preventiva",
+            "Seguro de vida"
         ],
         "resposta_correta": 2
     },
     {
-        "pergunta": "O que é o princípio da minimização na LGPD?",
+        "pergunta": "A partir de qual idade é possível contratar um plano Medsenior?",
         "alternativas": [
-            "Reduzir o tempo de armazenamento",
-            "Coletar apenas dados necessários para a finalidade",
-            "Minimizar custos de implementação",
-            "Reduzir o número de funcionários com acesso",
-            "Minimizar riscos de vazamento"
+            "50 anos",
+            "55 anos",
+            "60 anos",
+            "65 anos",
+            "70 anos"
         ],
         "resposta_correta": 1
     },
     {
-        "pergunta": "Qual direito o titular dos dados NÃO possui segundo a LGPD?",
+        "pergunta": "Qual é o principal diferencial da Medsenior no mercado?",
         "alternativas": [
-            "Acesso aos seus dados",
-            "Correção de dados incompletos",
-            "Eliminação de dados desnecessários",
-            "Portabilidade dos dados",
-            "Venda dos próprios dados"
+            "Preços mais baixos",
+            "Atendimento especializado para a terceira idade",
+            "Cobertura internacional",
+            "Consultas online",
+            "Medicamentos gratuitos"
+        ],
+        "resposta_correta": 1
+    },
+    {
+        "pergunta": "Qual é o tempo de carência para consultas médicas na Medsenior?",
+        "alternativas": [
+            "Não há carência",
+            "30 dias",
+            "60 dias",
+            "90 dias",
+            "180 dias"
+        ],
+        "resposta_correta": 0
+    },
+    {
+        "pergunta": "A Medsenior oferece cobertura para:",
+        "alternativas": [
+            "Apenas consultas",
+            "Consultas e exames",
+            "Cobertura hospitalar completa",
+            "Apenas emergências",
+            "Apenas medicina preventiva"
+        ],
+        "resposta_correta": 2
+    },
+    {
+        "pergunta": "Qual é o tempo de carência para partos na Medsenior?",
+        "alternativas": [
+            "180 dias",
+            "240 dias",
+            "300 dias",
+            "360 dias",
+            "Não se aplica ao público-alvo"
         ],
         "resposta_correta": 4
     },
     {
-        "pergunta": "O que é o DPO (Data Protection Officer)?",
+        "pergunta": "A Medsenior possui rede própria ou credenciada?",
         "alternativas": [
-            "Um software de proteção",
-            "Encarregado de proteção de dados",
-            "Departamento de proteção online",
-            "Documento de política organizacional",
-            "Dispositivo de proteção operacional"
+            "Apenas rede própria",
+            "Apenas rede credenciada",
+            "Ambas - rede própria e credenciada",
+            "Não possui rede",
+            "Apenas parcerias"
         ],
-        "resposta_correta": 1
+        "resposta_correta": 2
     },
     {
-        "pergunta": "A LGPD se aplica a:",
+        "pergunta": "Qual é o foco principal dos serviços da Medsenior?",
         "alternativas": [
-            "Apenas empresas públicas",
-            "Apenas empresas privadas",
-            "Apenas empresas com mais de 100 funcionários",
-            "Toda organização que trata dados pessoais",
-            "Apenas empresas de tecnologia"
+            "Medicina esportiva",
+            "Pediatria",
+            "Geriatria e cuidados com idosos",
+            "Medicina do trabalho",
+            "Medicina estética"
         ],
-        "resposta_correta": 3
+        "resposta_correta": 2
     },
     {
-        "pergunta": "Qual é o período de adaptação que as empresas tiveram para se adequar à LGPD?",
+        "pergunta": "A Medsenior oferece cobertura para procedimentos de alta complexidade?",
         "alternativas": [
-            "A lei entrou em vigor imediatamente",
-            "6 meses após a publicação",
-            "1 ano após a publicação",
-            "2 anos após a publicação",
-            "3 anos após a publicação"
+            "Não oferece",
+            "Apenas para emergências",
+            "Sim, conforme ANS",
+            "Apenas com coparticipação",
+            "Apenas mediante análise"
         ],
-        "resposta_correta": 3
+        "resposta_correta": 2
     }
 ]
 

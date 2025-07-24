@@ -1,5 +1,5 @@
 @echo off
-echo Iniciando Quiz LGPD - Universidade Belz...
+echo Iniciando Quiz Medsenior...
 echo.
 
 cd /d "%~dp0"
