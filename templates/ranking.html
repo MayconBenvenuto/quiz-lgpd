@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block title %}Ranking - Quiz LGPD - Universidade Belz{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <i class="fas fa-trophy fa-4x text-warning mb-3"></i>
+    <h2>Ranking do Quiz LGPD</h2>
+    <p class="lead">Confira a classificação de todos os participantes</p>
+</div>
+
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        {% if ranking %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="text-center">Posição</th>
+                        <th>Participante</th>
+                        <th class="text-center">Pontuação</th>
+                        <th class="text-center">Acertos</th>
+                        <th class="text-center">Data/Hora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in ranking %}
+                    <tr {% if loop.index <= 3 %}class="table-warning"{% endif %}>
+                        <td class="text-center">
+                            {% if loop.index == 1 %}
+                                <i class="fas fa-crown text-warning fa-lg"></i>
+                                <strong>1º</strong>
+                            {% elif loop.index == 2 %}
+                                <i class="fas fa-medal text-secondary fa-lg"></i>
+                                <strong>2º</strong>
+                            {% elif loop.index == 3 %}
+                                <i class="fas fa-medal text-warning fa-lg"></i>
+                                <strong>3º</strong>
+                            {% else %}
+                                <strong>{{ loop.index }}º</strong>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong>{{ item.participante.split(' – ')[0] }}</strong>
+                            <br>
+                            <small class="text-muted">
+                                {% if ' – ' in item.participante %}
+                                    {{ item.participante.split(' – ')[1] }}
+                                {% endif %}
+                            </small>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge bg-primary fs-6">{{ item.pontuacao }}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge bg-success">{{ item.acertos }}/{{ item.total_perguntas }}</span>
+                        </td>
+                        <td class="text-center">
+                            <small>{{ item.data_hora.split('T')[0] }}</small><br>
+                            <small class="text-muted">{{ item.data_hora.split('T')[1].split('.')[0] }}</small>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if ranking|length >= 3 %}
+        <div class="row mt-4">
+            <div class="col-md-4 text-center">
+                <div class="card border-warning">
+                    <div class="card-body">
+                        <i class="fas fa-medal text-warning fa-2x mb-2"></i>
+                        <h5 class="card-title">2º Lugar</h5>
+                        <p class="card-text">
+                            <strong>{{ ranking[1].participante.split(' – ')[0] }}</strong><br>
+                            <span class="badge bg-primary">{{ ranking[1].pontuacao }} pontos</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 text-center">
+                <div class="card border-warning bg-warning bg-opacity-10">
+                    <div class="card-body">
+                        <i class="fas fa-crown text-warning fa-3x mb-2"></i>
+                        <h4 class="card-title text-warning">🎉 CAMPEÃO 🎉</h4>
+                        <p class="card-text">
+                            <strong class="fs-5">{{ ranking[0].participante.split(' – ')[0] }}</strong><br>
+                            <span class="badge bg-warning text-dark fs-6">{{ ranking[0].pontuacao }} pontos</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 text-center">
+                <div class="card border-warning">
+                    <div class="card-body">
+                        <i class="fas fa-medal text-warning fa-2x mb-2"></i>
+                        <h5 class="card-title">3º Lugar</h5>
+                        <p class="card-text">
+                            <strong>{{ ranking[2].participante.split(' – ')[0] }}</strong><br>
+                            <span class="badge bg-primary">{{ ranking[2].pontuacao }} pontos</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <div class="text-center">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <h5>Nenhum resultado ainda</h5>
+                <p>Seja o primeiro a fazer o quiz!</p>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-custom me-2">
+                <i class="fas fa-play"></i> Fazer Quiz
+            </a>
+            <button id="atualizar-ranking" class="btn btn-outline-secondary">
+                <i class="fas fa-sync-alt"></i> Atualizar Ranking
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Estatísticas -->
+{% if ranking %}
+<div class="row mt-5">
+    <div class="col-lg-10 mx-auto">
+        <h4 class="text-center mb-4">📊 Estatísticas Gerais</h4>
+        <div class="row">
+            <div class="col-md-3 text-center mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                        <h5>{{ ranking|length }}</h5>
+                        <small class="text-muted">Participantes</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <i class="fas fa-star fa-2x text-warning mb-2"></i>
+                        <h5>{{ "%.0f"|format((ranking|sum(attribute='pontuacao'))/ranking|length) }}</h5>
+                        <small class="text-muted">Pontuação Média</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <i class="fas fa-trophy fa-2x text-success mb-2"></i>
+                        <h5>{{ ranking[0].pontuacao }}</h5>
+                        <small class="text-muted">Maior Pontuação</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <i class="fas fa-percentage fa-2x text-info mb-2"></i>
+                        <h5>{{ "%.1f"|format((ranking|sum(attribute='acertos')*100)/(ranking|length*10)) }}%</h5>
+                        <small class="text-muted">Taxa de Acertos</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    $('#atualizar-ranking').click(function() {
+        location.reload();
+    });
+    
+    // Auto-atualizar ranking a cada 30 segundos
+    setInterval(function() {
+        $.get('/api/ranking', function(data) {
+            // Verificar se há novos resultados e atualizar se necessário
+            const currentCount = $('tbody tr').length;
+            if (data.length > currentCount) {
+                location.reload();
+            }
+        });
+    }, 30000);
+});
+</script>
+{% endblock %}

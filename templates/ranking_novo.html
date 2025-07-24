@@ -1,0 +1,358 @@
+{% extends "base_novo.html" %}
+
+{% block content %}
+<div class="ranking-container">
+    <div class="text-center mb-5">
+        <i class="fas fa-trophy trophy-icon-large"></i>
+        <h2 style="font-size: 2.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;">
+            Ranking LGPD
+        </h2>
+        <p style="font-size: 1.3rem; color: var(--text-secondary);">
+            Desempenho dos participantes no Quiz LGPD
+        </p>
+    </div>
+    
+    {% if ranking %}
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="ranking-table">
+                {% for resultado in ranking %}
+                    <div class="ranking-item {% if loop.index == 1 %}first-place{% elif loop.index == 2 %}second-place{% elif loop.index == 3 %}third-place{% endif %}">
+                        <div class="position-badge">
+                            {% if loop.index == 1 %}
+                                <i class="fas fa-crown"></i>
+                            {% elif loop.index == 2 %}
+                                <i class="fas fa-medal"></i>
+                            {% elif loop.index == 3 %}
+                                <i class="fas fa-award"></i>
+                            {% else %}
+                                {{ loop.index }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="participant-info">
+                            <div class="participant-name">{{ resultado.participante }}</div>
+                            <div class="participant-stats">
+                                {{ resultado.acertos }}/{{ resultado.total_perguntas }} acertos
+                                {% if resultado.acertos > 0 %}
+                                    ({{ "%.1f"|format((resultado.acertos / resultado.total_perguntas) * 100) }}%)
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="score-display">
+                            <div class="score-value">{{ resultado.pontuacao }}</div>
+                            <div class="score-label">pontos</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Estatísticas Gerais -->
+    <div class="row mt-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="stats-container">
+                <h4 style="text-align: center; margin-bottom: 2rem; color: var(--text-primary);">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Estatísticas Gerais
+                </h4>
+                
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <i class="fas fa-users stat-icon"></i>
+                            <div class="stat-value">{{ ranking|length }}</div>
+                            <div class="stat-label">Participantes</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <i class="fas fa-star stat-icon"></i>
+                            <div class="stat-value">
+                                {% set max_score = ranking|map(attribute='pontuacao')|max %}
+                                {{ max_score if max_score else 0 }}
+                            </div>
+                            <div class="stat-label">Maior Pontuação</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <i class="fas fa-percentage stat-icon"></i>
+                            <div class="stat-value">
+                                {% set total_acertos = ranking|sum(attribute='acertos') %}
+                                {% set total_perguntas = ranking|length * 10 %}
+                                {{ "%.1f"|format((total_acertos / total_perguntas * 100) if total_perguntas > 0 else 0) }}%
+                            </div>
+                            <div class="stat-label">Taxa de Acerto</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <i class="fas fa-calculator stat-icon"></i>
+                            <div class="stat-value">
+                                {% set media_pontos = (ranking|sum(attribute='pontuacao') / ranking|length) if ranking|length > 0 else 0 %}
+                                {{ "%.0f"|format(media_pontos) }}
+                            </div>
+                            <div class="stat-label">Média de Pontos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% else %}
+    <div class="empty-ranking">
+        <i class="fas fa-clipboard-list" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+        <h4 style="color: var(--text-secondary); margin-bottom: 2rem;">Nenhum resultado ainda</h4>
+        <p style="color: var(--text-muted);">
+            Seja o primeiro a fazer o quiz e aparecer no ranking!
+        </p>
+    </div>
+    {% endif %}
+    
+    <!-- Botões de Ação -->
+    <div class="action-buttons-center">
+        <a href="/" class="btn-modern">
+            <i class="fas fa-play me-2"></i>
+            Fazer Quiz
+        </a>
+        {% if ranking %}
+        <button onclick="window.print()" class="btn-outline-modern">
+            <i class="fas fa-print me-2"></i>
+            Imprimir Ranking
+        </button>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+/* Estilos específicos para o ranking */
+.ranking-container {
+    padding: 2rem 0;
+}
+
+.trophy-icon-large {
+    font-size: 4rem;
+    color: var(--accent-color);
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.ranking-table {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.ranking-item:last-child {
+    border-bottom: none;
+}
+
+.ranking-item:hover {
+    background: var(--background-light);
+    transform: translateX(5px);
+}
+
+.ranking-item.first-place {
+    background: linear-gradient(135deg, #fff9c4, #fff);
+    border-left: 5px solid #ffd700;
+}
+
+.ranking-item.second-place {
+    background: linear-gradient(135deg, #f0f0f0, #fff);
+    border-left: 5px solid #c0c0c0;
+}
+
+.ranking-item.third-place {
+    background: linear-gradient(135deg, #ffeaa7, #fff);
+    border-left: 5px solid #cd7f32;
+}
+
+.position-badge {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+}
+
+.first-place .position-badge {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: var(--primary-color);
+}
+
+.second-place .position-badge {
+    background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+    color: var(--primary-color);
+}
+
+.third-place .position-badge {
+    background: linear-gradient(135deg, #cd7f32, #deb887);
+    color: var(--white);
+}
+
+.participant-info {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.participant-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.participant-stats {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.score-display {
+    text-align: right;
+}
+
+.score-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    line-height: 1;
+}
+
+.score-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stats-container {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow);
+}
+
+.stat-card {
+    text-align: center;
+    padding: 1.5rem;
+    background: var(--background-light);
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.empty-ranking {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    margin: 2rem 0;
+}
+
+.action-buttons-center {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+}
+
+/* Estilos para impressão */
+@media print {
+    .action-buttons-center {
+        display: none;
+    }
+    
+    .ranking-item:hover {
+        transform: none;
+        background: transparent;
+    }
+    
+    .trophy-icon-large,
+    .stat-icon {
+        color: #666 !important;
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .ranking-item {
+        padding: 1rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .position-badge {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .participant-info {
+        margin-right: 0;
+    }
+    
+    .score-display {
+        text-align: center;
+    }
+    
+    .action-buttons-center {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .stat-card {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+{% endblock %}

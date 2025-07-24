@@ -1,0 +1,404 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="inicio-quiz">
+    <div class="text-center mb-4">
+        <i class="fas fa-shield-alt fa-4x text-primary mb-3"></i>
+        <h2>Bem-vindo ao Quiz LGPD!</h2>
+        <p class="lead">Teste seus conhecimentos sobre a Lei Geral de Proteção de Dados</p>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Selecione seu nome para começar:</h5>
+                    <select id="participante-select" class="form-select mb-3">
+                        <option value="">Escolha seu nome...</option>
+                        {% for participante in participantes %}
+                        <option value="{{ participante }}">{{ participante }}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle"></i> Instruções:</h6>
+                        <ul class="mb-0">
+                            <li>O quiz contém 10 perguntas sobre LGPD</li>
+                            <li>Você terá 60 segundos para responder cada pergunta</li>
+                            <li>Sua pontuação será baseada na velocidade de resposta</li>
+                            <li>Ao final, você verá o ranking geral</li>
+                        </ul>
+                    </div>
+                    
+                    <button id="iniciar-btn" class="btn btn-custom w-100" disabled>
+                        <i class="fas fa-play"></i> Iniciar Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="quiz-area" style="display: none;">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="score-display">
+                <i class="fas fa-star"></i> Pontuação: <span id="pontuacao-atual">0</span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="timer" id="timer">60</div>
+        </div>
+    </div>
+    
+    <div class="progress-custom mb-3">
+        <div id="progress-bar" class="progress-bar-custom" style="width: 0%"></div>
+    </div>
+    
+    <div class="question-card">
+        <h5 id="pergunta-numero" class="text-muted mb-3">Pergunta 1 de 10</h5>
+        <h4 id="pergunta-texto" class="mb-4">Carregando pergunta...</h4>
+        
+        <div id="alternativas">
+            <!-- Alternativas serão inseridas aqui -->
+        </div>
+        
+        <div id="resultado" style="display: none;" class="mt-3">
+            <div id="resultado-texto" class="alert"></div>
+            <button id="proxima-btn" class="btn btn-custom">
+                <i class="fas fa-arrow-right"></i> Próxima Pergunta
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="quiz-finalizado" style="display: none;">
+    <div class="text-center">
+        <i class="fas fa-trophy fa-4x text-warning mb-3"></i>
+        <h2>Quiz Finalizado!</h2>
+        
+        <div class="row mt-4">
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5>Seus Resultados</h5>
+                        <div class="score-display">
+                            <h3 id="pontuacao-final">0</h3>
+                            <p>Pontos Totais</p>
+                        </div>
+                        <p id="acertos-texto" class="lead"></p>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="/ranking" class="btn btn-custom">
+                                <i class="fas fa-trophy"></i> Ver Ranking Completo
+                            </a>
+                            <a href="/" class="btn btn-outline-secondary">
+                                <i class="fas fa-redo"></i> Fazer Quiz Novamente
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Variáveis globais
+let timerInterval;
+let tempoRestante = 60;
+let perguntaAtual = 0;
+let totalPerguntas = 10;
+
+// Aguardar carregamento completo da página
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM carregado - JavaScript Vanilla');
+    
+    const selectParticipante = document.getElementById('participante-select');
+    const botaoIniciar = document.getElementById('iniciar-btn');
+    const botaoProxima = document.getElementById('proxima-btn');
+    
+    console.log('Select encontrado:', selectParticipante ? 'SIM' : 'NÃO');
+    console.log('Botão encontrado:', botaoIniciar ? 'SIM' : 'NÃO');
+    
+    // Função para atualizar estado do botão
+    function atualizarBotao() {
+        if (selectParticipante && botaoIniciar) {
+            const participante = selectParticipante.value;
+            console.log('Valor do select:', participante);
+            
+            if (participante && participante.trim() !== '') {
+                botaoIniciar.disabled = false;
+                botaoIniciar.style.opacity = '1';
+                botaoIniciar.style.cursor = 'pointer';
+                console.log('✅ Botão HABILITADO');
+            } else {
+                botaoIniciar.disabled = true;
+                botaoIniciar.style.opacity = '0.6';
+                botaoIniciar.style.cursor = 'not-allowed';
+                console.log('❌ Botão DESABILITADO');
+            }
+        }
+    }
+    
+    // Event listener para mudança no select
+    if (selectParticipante) {
+        selectParticipante.addEventListener('change', function() {
+            console.log('🔄 Mudança detectada no select:', this.value);
+            atualizarBotao();
+        });
+        
+        selectParticipante.addEventListener('input', function() {
+            console.log('📝 Input detectado no select:', this.value);
+            atualizarBotao();
+        });
+    }
+    
+    // Event listener para clique no botão
+    if (botaoIniciar) {
+        botaoIniciar.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('🚀 Botão clicado!');
+            
+            const participante = selectParticipante ? selectParticipante.value : '';
+            console.log('Participante selecionado:', participante);
+            
+            if (!participante || participante.trim() === '') {
+                alert('Por favor, selecione seu nome!');
+                return;
+            }
+            
+            iniciarQuiz(participante);
+        });
+    }
+    
+    // Event listener para próxima pergunta
+    if (botaoProxima) {
+        botaoProxima.addEventListener('click', function() {
+            carregarPergunta();
+        });
+    }
+    
+    // Verificar estado inicial
+    setTimeout(atualizarBotao, 500);
+    
+    // Forçar verificação a cada segundo por 5 segundos (para debug)
+    let contador = 0;
+    const intervalCheck = setInterval(function() {
+        contador++;
+        console.log(`Verificação ${contador}:`, selectParticipante ? selectParticipante.value : 'Select não encontrado');
+        atualizarBotao();
+        
+        if (contador >= 5) {
+            clearInterval(intervalCheck);
+        }
+    }, 1000);
+});
+
+function iniciarQuiz(participante) {
+    console.log('🎯 Iniciando quiz para:', participante);
+    
+    fetch('/iniciar_quiz', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            participante: participante
+        })
+    })
+    .then(response => {
+        console.log('📡 Resposta status:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('📦 Resposta do servidor:', data);
+        if (data.sucesso) {
+            document.getElementById('inicio-quiz').style.display = 'none';
+            document.getElementById('quiz-area').style.display = 'block';
+            carregarPergunta();
+        }
+    })
+    .catch(error => {
+        console.error('❌ Erro:', error);
+        alert('Erro ao iniciar quiz: ' + error.message);
+    });
+}
+
+function carregarPergunta() {
+    document.getElementById('resultado').style.display = 'none';
+    document.getElementById('alternativas').innerHTML = '';
+    
+    fetch('/pergunta', {
+        credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('❓ Pergunta carregada:', data);
+        
+        if (data.quiz_finalizado) {
+            finalizarQuiz();
+            return;
+        }
+        
+        perguntaAtual = data.numero;
+        totalPerguntas = data.total;
+        
+        document.getElementById('pergunta-numero').textContent = `Pergunta ${data.numero} de ${data.total}`;
+        document.getElementById('pergunta-texto').textContent = data.pergunta;
+        
+        // Atualizar barra de progresso
+        const progresso = ((data.numero - 1) / data.total) * 100;
+        document.getElementById('progress-bar').style.width = progresso + '%';
+        
+        // Criar alternativas
+        const alternativasDiv = document.getElementById('alternativas');
+        data.alternativas.forEach((alternativa, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.setAttribute('data-resposta', index);
+            btn.innerHTML = `<strong>${String.fromCharCode(65 + index)})</strong> ${alternativa}`;
+            
+            btn.addEventListener('click', function() {
+                const resposta = parseInt(this.getAttribute('data-resposta'));
+                responderPergunta(resposta);
+            });
+            
+            alternativasDiv.appendChild(btn);
+        });
+        
+        // Iniciar timer
+        iniciarTimer();
+        
+    })
+    .catch(error => {
+        console.error('❌ Erro ao carregar pergunta:', error);
+        alert('Erro ao carregar pergunta!');
+    });
+}
+
+function iniciarTimer() {
+    tempoRestante = 60;
+    const timerElement = document.getElementById('timer');
+    timerElement.textContent = tempoRestante;
+    timerElement.classList.remove('warning');
+    
+    timerInterval = setInterval(function() {
+        tempoRestante--;
+        timerElement.textContent = tempoRestante;
+        
+        if (tempoRestante <= 10) {
+            timerElement.classList.add('warning');
+        }
+        
+        if (tempoRestante <= 0) {
+            clearInterval(timerInterval);
+            // Resposta automática (nenhuma selecionada)
+            responderPergunta(-1);
+        }
+    }, 1000);
+}
+
+function responderPergunta(resposta) {
+    clearInterval(timerInterval);
+    
+    // Desabilitar botões
+    const botoes = document.querySelectorAll('.option-btn');
+    botoes.forEach(btn => btn.disabled = true);
+    
+    fetch('/responder', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            resposta: resposta,
+            tempo_restante: tempoRestante
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Atualizar pontuação
+        document.getElementById('pontuacao-atual').textContent = data.pontuacao_total;
+        
+        // Mostrar resultado
+        mostrarResultado(data, resposta);
+    })
+    .catch(error => {
+        console.error('❌ Erro ao responder:', error);
+        alert('Erro ao enviar resposta!');
+    });
+}
+
+function mostrarResultado(data, respostaUsuario) {
+    // Destacar alternativas
+    const botoes = document.querySelectorAll('.option-btn');
+    botoes.forEach((btn, index) => {
+        if (index === data.resposta_correta) {
+            btn.classList.add('correct');
+        } else if (index === respostaUsuario && !data.acertou) {
+            btn.classList.add('incorrect');
+        }
+    });
+    
+    // Mostrar mensagem de resultado
+    let mensagem = '';
+    let classe = '';
+    
+    if (data.acertou) {
+        mensagem = `
+            <strong><i class="fas fa-check-circle"></i> Correto!</strong><br>
+            Você ganhou ${data.pontos_ganhos} pontos!
+        `;
+        classe = 'alert-success';
+    } else {
+        mensagem = `
+            <strong><i class="fas fa-times-circle"></i> Incorreto!</strong><br>
+            A resposta correta é: <strong>${data.alternativa_correta}</strong>
+        `;
+        classe = 'alert-danger';
+    }
+    
+    const resultadoTexto = document.getElementById('resultado-texto');
+    resultadoTexto.innerHTML = mensagem;
+    resultadoTexto.className = 'alert ' + classe;
+    document.getElementById('resultado').style.display = 'block';
+    
+    // Mudar texto do botão se for a última pergunta
+    const proximaBtn = document.getElementById('proxima-btn');
+    if (perguntaAtual >= totalPerguntas) {
+        proximaBtn.innerHTML = '<i class="fas fa-flag-checkered"></i> Finalizar Quiz';
+        proximaBtn.onclick = finalizarQuiz;
+    }
+}
+
+function finalizarQuiz() {
+    fetch('/finalizar_quiz', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('quiz-area').style.display = 'none';
+        document.getElementById('pontuacao-final').textContent = data.pontuacao_final;
+        document.getElementById('acertos-texto').textContent = `${data.acertos} acertos de ${data.total_perguntas} perguntas`;
+        document.getElementById('quiz-finalizado').style.display = 'block';
+        
+        // Atualizar barra de progresso para 100%
+        document.getElementById('progress-bar').style.width = '100%';
+    })
+    .catch(error => {
+        console.error('❌ Erro ao finalizar:', error);
+        alert('Erro ao finalizar quiz!');
+    });
+}
+</script>
+{% endblock %}
